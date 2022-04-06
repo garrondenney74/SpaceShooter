@@ -1,11 +1,11 @@
 /**** 
- * Created by: Akram Taghavi-Burris
- * Date Created: March 16, 2022
+ * Created by: Garron Denney
+ * Date Created: April 5, 2022
  * 
- * Last Edited by: 
- * Last Edited: 
+ * Last Edited by: Garron Denney
+ * Last Edited: April 5, 2022
  * 
- * Description: Enemy controler
+ * Description: Enemy controller
 ****/
 
 /*** Using Namespaces ***/
@@ -47,7 +47,7 @@ public class Enemy : MonoBehaviour
     void Update()
     {
        //Call the Move Method
-
+        Move();
 
         //Check if bounds check exists and the object is off the bottom of the screne
         if(bndCheck != null && bndCheck.offDown)
@@ -61,5 +61,12 @@ public class Enemy : MonoBehaviour
 
     
     //Virtual methods can be overridden by child instances
+    public virtual void Move()
+    {
+        Vector3 temPos = pos; //temporay position
+        temPos.y -= speed * Time.deltaTime; //temporay y postion , moving down
+        pos = temPos; //position is equal to tempary positon
+    }//end Move()
+
 
 }
