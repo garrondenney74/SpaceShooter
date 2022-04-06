@@ -20,7 +20,7 @@ public class Hero : MonoBehaviour
 
     #region PlayerShip Singleton
     static public Hero SHIP; //refence GameManager
-   
+
     //Check to make sure only one gm of the GameManager is in the scene
     void CheckSHIPIsInScene()
     {
@@ -38,6 +38,7 @@ public class Hero : MonoBehaviour
     #endregion
 
     GameManager gm; //reference to game manager
+    ObjectPool pool; //reference to object pool
 
     [Header("Ship Movement")]
     public float speed = 10;
@@ -47,13 +48,19 @@ public class Hero : MonoBehaviour
 
 
     [Space(10)]
+    [Header("Projectile Settings")]
+    //public GameObject projectilePrefab; // the game object of the projectile
+    public float projectileSpeed; //speed of the projectile
+
+    [Space(10)]
 
     private GameObject lastTriggerGo; //reference to the last triggering game object
-   
+    [Header("Shield Settings")]
     [SerializeField] //show in inspector
+
     private float _shieldLevel = 1; //level for shields
     public int maxShield = 4; //maximum shield level
-    
+
     //method that acts as a field (property), if the property falls below zero the game object is desotryed
     public float shieldLevel
     {
@@ -68,7 +75,7 @@ public class Hero : MonoBehaviour
                 Destroy(this.gameObject);
                 Debug.Log(gm.name);
                 gm.LostLife();
-                
+
             }
 
         }
@@ -88,17 +95,18 @@ public class Hero : MonoBehaviour
     private void Start()
     {
         gm = GameManager.GM; //find the game manager
+        pool = ObjectPool.POOL; //find the object pool
     }//end Start()
 
 
-   
+
     // Update is called once per frame (page 551)
-        void Update()
+    void Update()
     {
         //player input
         float xAxis = Input.GetAxis("Horizontal");
         float yAxis = Input.GetAxis("Vertical");
-        
+
         //Change the transform based on the axis
         Vector3 pos = transform.position;
         pos.x += xAxis * speed * Time.deltaTime;
@@ -108,8 +116,15 @@ public class Hero : MonoBehaviour
         //Rotate the ship to make it feel more dynamic
         transform.rotation = Quaternion.Euler(yAxis * pitchMult, xAxis * rollMult, 0);
 
- }//end Update()
-       
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            FireProjectile();
+        }
+
+
+    }//end Update()
+
 
 
 
@@ -124,9 +139,9 @@ public class Hero : MonoBehaviour
         GameObject go = rootT.gameObject; //game object of parent transform
 
         if (go == lastTriggerGo) { return; } //don't do anything if it's the same object we last collied with
-        
+
         lastTriggerGo = go; //set the triger to the last trigger
-        
+
         if (go.tag == "Enemy")
         {
             Debug.Log("Triggered by Enemy " + other.gameObject.name);
@@ -135,8 +150,26 @@ public class Hero : MonoBehaviour
         }
         else
         {
-             Debug.Log("Triggered by non-Enemy " + other.gameObject.name);
+            Debug.Log("Triggered by non-Enemy " + other.gameObject.name);
         }
     }//end OnTriggerEnter()
+
+    //shooting projectile
+
+    void FireProjectile()
+    {
+        //GameObject projGo = Instantiate<GameObject>(projectilePrefab);
+        GameObject projGo = pool.GetObject();
+        if (projGo != null)
+        {
+            
+            projGo.transform.position = transform.position;
+            Rigidbody rb = projGo.GetComponent<Rigidbody>();
+            rb.velocity = Vector3.up * projectileSpeed;
+        }
+
+
+    }//end FireProjectile()
+
 
 }
