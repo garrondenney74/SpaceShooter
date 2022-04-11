@@ -3,7 +3,7 @@
  * Date Created: April 5, 2022
  * 
  * Last Edited by: NA
- * Last Edited: April 5, 2022
+ * Last Edited: April 11, 2022
  * 
  * Description: Basic GameManager Template
 ****/
@@ -19,6 +19,10 @@ using UnityEngine.SceneManagement; //libraries for accessing scenes
 public enum GameState { Title, Playing, BeatLevel, LostLevel, GameOver, Idle , Testing };
 //enum of game states (work like it's own class)
 
+
+
+//GameManager required an Auio Source
+[RequireComponent(typeof(AudioSource))]
 public class GameManager : MonoBehaviour
 {
     /*** VARIABLES ***/
@@ -76,6 +80,9 @@ public class GameManager : MonoBehaviour
 
     static public int score;  //score value
     public int Score { get { return score; } set { score = value; } }//access to static variable score [get/set methods]
+    [Space(10)]
+    public AudioClip backgroundMusicClip;
+    private AudioSource audioSource;
 
     [Space(10)]
     public string defaultEndMessage = "Game Over";//the end screen message, depends on winning outcome
@@ -137,6 +144,17 @@ public class GameManager : MonoBehaviour
     //Start is called once before the update
     void Start()
     {
+        if(backgroundMusicClip != null)
+        {
+            audioSource = GetComponent<AudioSource>();
+            audioSource.volume = 0.5f; //set volume 
+            audioSource.clip = backgroundMusicClip; //set background music
+            audioSource.playOnAwake = true;
+            audioSource.Play();
+        }
+
+
+
         //if we run play the game from the level instead of start scene (PLAYTESTING ONLY)
         if (currentSceneName != startScene) { SetGameState(GameState.Testing); }//set the game state for testing }
 
