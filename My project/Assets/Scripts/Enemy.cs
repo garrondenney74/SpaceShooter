@@ -3,7 +3,7 @@
  * Date Created: April 5, 2022
  * 
  * Last Edited by: Garron Denney
- * Last Edited: April 5, 2022
+ * Last Edited: April 13, 2022
  * 
  * Description: Enemy controller
 ****/
@@ -69,4 +69,24 @@ public class Enemy : MonoBehaviour
     }//end Move()
 
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        GameObject otherGo = collision.gameObject;
+        if (otherGo.tag == "ProjectileHero")
+        {
+            Debug.Log("Enemy hit by projectile " + otherGo.name);
+
+            otherGo.SetActive(false); //set the projectile to deactivate and return to pool
+
+            GameManager.GM.UpdateScore(score);//add to score
+
+            Destroy(gameObject); //destroy self
+
+        }
+        else
+        {
+            Debug.Log("Enemy hit by non-projectile " + otherGo.name);
+        }//end if(otherGo.tag == "Projectile Hero")
+
+ }//end OnCollisionEnter()
 }
