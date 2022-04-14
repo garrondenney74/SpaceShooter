@@ -1,27 +1,40 @@
 /**** 
  * Created by: Garron Denney
- * Date Created: April 13, 2022
+ * Date Created: April 6, 2022
  * 
- * Last Edited by:
- * Last Edited: 
+ * Last Edited by: Garron Denney
+ * Last Edited: N/A
  * 
- * Description: Scrolls material for dynamic background
-****/
+ * Description: Pool of objects for re - use
+***/
+
+
+
+
+
+
+
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MaterialScroller : MonoBehaviour
+public class materialScroller : MonoBehaviour
 {
-    /***VARIABLES***/
-
-    public Vector2 scrollSpeed = new Vector2(0, 0f); //x and y speed for scroll
-
-    private Renderer goRenderer; //game object's renderer component
 
     private Material goMat; //the game object's material
+    private Renderer goRenderer;//reference to the object's mesh renderer
 
-    private Vector2 offset; //the offset of scroll
+    public Vector2 scrollSpeed = new Vector2(0, 0);//x and y speed of scroll
+
+    private Vector2 offset;// the offset of the scroll over time
+
+
+
+
+
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -33,8 +46,7 @@ public class MaterialScroller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        offset = (scrollSpeed * Time.deltaTime); //set offset value over time
-        goMat.mainTextureOffset += offset; //set texture offeset
+        offset = scrollSpeed * Time.deltaTime;
+        goMat.mainTextureOffset += offset;
     }//end Update()
-
 }
